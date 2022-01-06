@@ -29,7 +29,7 @@
 #define LLVM_PASS_H
 
 #include <string>
-
+#include "llvm/IR/Instructions.h"
 namespace llvm {
 
 class AnalysisResolver;
@@ -306,7 +306,6 @@ public:
   /// runOnFunction - Virtual method overriden by subclasses to do the
   /// per-function processing of the pass.
   virtual bool runOnFunction(Function &F) = 0;
-
   void assignPassManager(PMStack &PMS, PassManagerType T) override;
 
   ///  Return what kind of Pass Manager can manage this pass.
@@ -330,7 +329,28 @@ extern bool TimePassesIsEnabled;
 /// (For new pass manager only)
 extern bool TimePassesPerRun;
 
-} // end namespace llvm
+class HY546LLVMPass : public Pass{
+        public:
+explicit HY546LLVMPass(char &pid) : Pass(PT_Function, pid) {}
+  /// createPrinterPass - Get a function printer pass.
+  Pass *createPrinterPass(raw_ostream &OS,
+                          const std::string &Banner) const override;
+                virtual bool isPrintf(CallInst &C) = 0;
+
+  ///  Return what kind of Pass Manager can manage this pass.
+  PassManagerType getPotentialPassManagerType() const override;
+
+protected:
+  /// Optional passes call this function to check whether the pass should be
+  /// skipped. This is the case when Attribute::OptimizeNone is set or when
+  /// optimization bisect is over the limit.
+  bool skipFunction(const Function &F) const;
+
+};
+
+} 
+
+// end namespace llvm
 
 // Include support files that contain important APIs commonly used by Passes,
 // but that we want to separate out to make it easier to read the header files.

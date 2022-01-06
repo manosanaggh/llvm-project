@@ -152,15 +152,38 @@ Pass *FunctionPass::createPrinterPass(raw_ostream &OS,
   return createPrintFunctionPass(OS, Banner);
 }
 
+Pass *HY546LLVMPass::createPrinterPass(raw_ostream &OS,
+                                      const std::string &Banner) const {
+  return createPrintFunctionPass(OS, Banner);
+}
+
 PassManagerType FunctionPass::getPotentialPassManagerType() const {
   return PMT_FunctionPassManager;
 }
+
+PassManagerType HY546LLVMPass::getPotentialPassManagerType() const {
+  return PMT_FunctionPassManager;
+}
+
 
 static std::string getDescription(const Function &F) {
   return "function (" + F.getName().str() + ")";
 }
 
 bool FunctionPass::skipFunction(const Function &F) const {
+  OptPassGate &Gate = F.getContext().getOptPassGate();
+  if (Gate.isEnabled() && !Gate.shouldRunPass(this, getDescription(F)))
+    return true;
+
+  if (F.hasOptNone()) {
+    LLVM_DEBUG(dbgs() << "Skipping pass '" << getPassName() << "' on function "
+                      << F.getName() << "\n");
+    return true;
+  }
+  return false;
+}
+
+bool HY546LLVMPass::skipFunction(const Function &F) const {
   OptPassGate &Gate = F.getContext().getOptPassGate();
   if (Gate.isEnabled() && !Gate.shouldRunPass(this, getDescription(F)))
     return true;
