@@ -6,6 +6,11 @@ define i32 @foo() {
   ret i32 %a
 }
 
+define void @main(){
+  %1 = call i32 @foo()
+  ret void
+}
+
 declare i32 @printf(i8*nocapture)
 
 define void @bar() {

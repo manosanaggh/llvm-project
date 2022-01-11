@@ -56,6 +56,7 @@ enum PassManagerType {
   PMT_FunctionPassManager,   ///< FPPassManager
   PMT_LoopPassManager,       ///< LPPassManager
   PMT_RegionPassManager,     ///< RGPassManager
+  PMT_HY546LLVMPassManager,
   PMT_Last
 };
 
@@ -66,7 +67,8 @@ enum PassKind {
   PT_Function,
   PT_CallGraphSCC,
   PT_Module,
-  PT_PassManager
+  PT_PassManager,
+  PT_HY546LLVM
 };
 
 /// This enumerates the LLVM full LTO or ThinLTO optimization phases.
@@ -335,7 +337,7 @@ explicit HY546LLVMPass(char &pid) : Pass(PT_Function, pid) {}
   /// createPrinterPass - Get a function printer pass.
   Pass *createPrinterPass(raw_ostream &OS,
                           const std::string &Banner) const override;
-                virtual bool isPrintf(CallInst &C) = 0;
+  virtual bool runOnFunction(Function &F) = 0;
 
   ///  Return what kind of Pass Manager can manage this pass.
   PassManagerType getPotentialPassManagerType() const override;

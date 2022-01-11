@@ -64,6 +64,21 @@ PreservedAnalyses PrintFunctionPass::run(Function &F,
   return PreservedAnalyses::all();
 }
 
+PrintHY546LLVMPass::PrintHY546LLVMPass() : OS(dbgs()) {}
+PrintHY546LLVMPass::PrintHY546LLVMPass(raw_ostream &OS, const std::string &Banner)
+    : OS(OS), Banner(Banner) {}
+
+PreservedAnalyses PrintHY546LLVMPass::run(Function &F,
+                                         FunctionAnalysisManager &) {
+  if (isFunctionInPrintList(F.getName())) {
+    if (forcePrintModuleIR())
+      OS << Banner << " (function: " << F.getName() << ")\n" << *F.getParent();
+    else
+      OS << Banner << '\n' << static_cast<Value &>(F);
+  }
+  return PreservedAnalyses::all();
+}
+
 namespace {
 
 class PrintModulePassWrapper : public ModulePass {
@@ -112,6 +127,29 @@ public:
   StringRef getPassName() const override { return "Print Function IR"; }
 };
 
+class PrintHY546LLVMPassWrapper : public HY546LLVMPass {
+  PrintHY546LLVMPass P;
+
+public:
+  static char ID;
+  PrintHY546LLVMPassWrapper() : HY546LLVMPass(ID) {}
+  PrintHY546LLVMPassWrapper(raw_ostream &OS, const std::string &Banner)
+      : HY546LLVMPass(ID), P(OS, Banner) {}
+
+  // This pass just prints a banner followed by the function as it's processed.
+  bool runOnFunction(Function &F) override {
+    FunctionAnalysisManager DummyFAM;
+    P.run(F, DummyFAM);
+    return false;
+  }
+
+  void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.setPreservesAll();
+  }
+
+  StringRef getPassName() const override { return "Print HY546LLVMPass IR"; }
+};
+
 }
 
 char PrintModulePassWrapper::ID = 0;
@@ -120,6 +158,10 @@ INITIALIZE_PASS(PrintModulePassWrapper, "print-module",
 char PrintFunctionPassWrapper::ID = 0;
 INITIALIZE_PASS(PrintFunctionPassWrapper, "print-function",
                 "Print function to stderr", false, true)
+
+char PrintHY546LLVMPassWrapper::ID = 0;
+INITIALIZE_PASS(PrintHY546LLVMPassWrapper, "print-hy546llvm",
+                "Print hy546llvmpass to stderr", false, true)
 
 ModulePass *llvm::createPrintModulePass(llvm::raw_ostream &OS,
                                         const std::string &Banner,
@@ -132,9 +174,15 @@ FunctionPass *llvm::createPrintFunctionPass(llvm::raw_ostream &OS,
   return new PrintFunctionPassWrapper(OS, Banner);
 }
 
+HY546LLVMPass *llvm::createPrintHY546LLVMPass(llvm::raw_ostream &OS,
+                                            const std::string &Banner) {
+  return new PrintHY546LLVMPassWrapper(OS, Banner);
+}
+
 bool llvm::isIRPrintingPass(Pass *P) {
   const char *PID = (const char*)P->getPassID();
 
   return (PID == &PrintModulePassWrapper::ID) ||
-         (PID == &PrintFunctionPassWrapper::ID);
+         (PID == &PrintFunctionPassWrapper::ID) ||
+	 (PID == &PrintHY546LLVMPassWrapper::ID);
 }

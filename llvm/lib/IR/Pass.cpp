@@ -154,7 +154,7 @@ Pass *FunctionPass::createPrinterPass(raw_ostream &OS,
 
 Pass *HY546LLVMPass::createPrinterPass(raw_ostream &OS,
                                       const std::string &Banner) const {
-  return createPrintFunctionPass(OS, Banner);
+  return createPrintHY546LLVMPass(OS, Banner);
 }
 
 PassManagerType FunctionPass::getPotentialPassManagerType() const {
@@ -162,7 +162,7 @@ PassManagerType FunctionPass::getPotentialPassManagerType() const {
 }
 
 PassManagerType HY546LLVMPass::getPotentialPassManagerType() const {
-  return PMT_FunctionPassManager;
+  return PMT_HY546LLVMPassManager;
 }
 
 
