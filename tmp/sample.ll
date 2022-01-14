@@ -1,4 +1,4 @@
-; ModuleID = 'test.c'
+; ModuleID = '<stdin>'
 source_filename = "test.c"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
@@ -19,13 +19,15 @@ define i32 @main() local_unnamed_addr #0 {
   %1 = tail call %struct._IO_FILE* @fopen(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @.str, i64 0, i64 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i64 0, i64 0))
   store %struct._IO_FILE* %1, %struct._IO_FILE** @fptr, align 8, !tbaa !2
   %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.4, i64 0, i64 0), i32 2000) #2
-  %3 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.5, i64 0, i64 0), i32 2500) #2
-  %4 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
-  %5 = tail call i64 @fwrite(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.2, i64 0, i64 0), i64 6, i64 1, %struct._IO_FILE* %4)
+  %3 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8
+  %4 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.5, i64 0, i64 0), i32 2500) #2
+  %5 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8
   %6 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
-  %7 = tail call i64 @fwrite(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str.3, i64 0, i64 0), i64 8, i64 1, %struct._IO_FILE* %6)
+  %7 = tail call i64 @fwrite(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.2, i64 0, i64 0), i64 6, i64 1, %struct._IO_FILE* %6)
   %8 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
-  %9 = tail call i32 @fclose(%struct._IO_FILE* %8)
+  %9 = tail call i64 @fwrite(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str.3, i64 0, i64 0), i64 8, i64 1, %struct._IO_FILE* %8)
+  %10 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
+  %11 = tail call i32 @fclose(%struct._IO_FILE* %10)
   ret i32 0
 }
 
@@ -38,7 +40,9 @@ declare i32 @fclose(%struct._IO_FILE* nocapture) local_unnamed_addr #1
 ; Function Attrs: nounwind uwtable
 define void @print_to_stdout() local_unnamed_addr #0 {
   %1 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.4, i64 0, i64 0), i32 2000)
-  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.5, i64 0, i64 0), i32 2500)
+  %2 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8
+  %3 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.5, i64 0, i64 0), i32 2500)
+  %4 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8
   ret void
 }
 
