@@ -21,6 +21,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
 #include "llvm/IR/IRPrintingPasses.h"
+#include "llvm/IR/User.h"
 using namespace llvm;
 
 #define DEBUG_TYPE "hello"
@@ -61,6 +62,7 @@ for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
 		//glInstVec.push_back(li);
 		//i--;
 	}
+
   	CallInst *callInst = dyn_cast<CallInst>(ii);
           if (callInst == nullptr) {
             continue;
@@ -80,9 +82,18 @@ for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
 		errs() << *ii << "\n\n";
 		StringRef path = "/spare/manosanag/myllvm/llvm-project/tmp/sample.ll";
 		std::vector<Value *> Args;
-		for(llvm::Function::arg_iterator ai = calledFunction->arg_begin(), ae = calledFunction->arg_end(); ai != ae; ++ai){
+		/*for(llvm::Function::arg_iterator ai = calledFunction->arg_begin(), ae = calledFunction->arg_end(); ai != ae; ++ai){
 			Args.push_back(ai);
 			outs() << *ai << "\n";
+		}*/
+
+		//outs() << **(callInst->value_op_begin()) << "\n";
+		for(llvm::User::value_op_iterator vi = callInst->value_op_begin(); vi != callInst->value_op_end(); ++vi){
+			vi++;
+			if(vi == callInst->value_op_end()) break;
+			vi--;
+			//outs() << **vi << "\n";	
+			Args.push_back(*vi);
 		}
 
                 i++;
@@ -91,6 +102,10 @@ for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
 		if(gi== NULL) outs() << "NULL" << "\n";
 		//outs() << x << "\n";
                 llvm::LoadInst *li = new llvm::LoadInst(gi->getOperand(0)->getType(), gi->getOperand(1), "", next);
+		outs() << *(li->getPointerOperand()) << "\n";
+		//Function *fprintf = Function::Create(functionType, Function::ExternalLinkage, "fprintf", F.getParent());
+		F.getParent()->getOrInsertFunction("fprintf", Type::getInt64Ty(F.getParent()->getContext()),F.getParent()->getFunction("fopen")->getReturnType(),Type::getInt8PtrTy(F.getParent()->getContext()));
+		//Instruction *newInst = CallInst::Create(F.getParent()->getFunction("fprintf"), Args, "",next);
                 i--;
 		
 		//Function *fprintf;

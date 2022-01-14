@@ -13,24 +13,14 @@ main:                                   # @main
 	movl	$.L.str.1, %esi
 	callq	fopen
 	movq	%rax, fptr(%rip)
-	movl	$.L.str.4, %edi
+	movl	$.L.str.2, %edi
 	movl	$2000, %esi             # imm = 0x7D0
 	xorl	%eax, %eax
 	callq	printf
-	movl	$.L.str.5, %edi
+	movl	$.L.str.3, %edi
 	movl	$2500, %esi             # imm = 0x9C4
 	xorl	%eax, %eax
 	callq	printf
-	movq	fptr(%rip), %rcx
-	movl	$.L.str.2, %edi
-	movl	$6, %esi
-	movl	$1, %edx
-	callq	fwrite
-	movq	fptr(%rip), %rcx
-	movl	$.L.str.3, %edi
-	movl	$8, %esi
-	movl	$1, %edx
-	callq	fwrite
 	movq	fptr(%rip), %rdi
 	callq	fclose
 	xorl	%eax, %eax
@@ -49,11 +39,11 @@ print_to_stdout:                        # @print_to_stdout
 	pushq	%rax
 .Lcfi1:
 	.cfi_def_cfa_offset 16
-	movl	$.L.str.4, %edi
+	movl	$.L.str.2, %edi
 	movl	$2000, %esi             # imm = 0x7D0
 	xorl	%eax, %eax
 	callq	printf
-	movl	$.L.str.5, %edi
+	movl	$.L.str.3, %edi
 	movl	$2500, %esi             # imm = 0x9C4
 	xorl	%eax, %eax
 	popq	%rcx
@@ -83,23 +73,13 @@ fptr:
 
 	.type	.L.str.2,@object        # @.str.2
 .L.str.2:
-	.asciz	"manos\n"
-	.size	.L.str.2, 7
+	.asciz	"manos %d\n"
+	.size	.L.str.2, 10
 
 	.type	.L.str.3,@object        # @.str.3
 .L.str.3:
-	.asciz	"giorgis\n"
-	.size	.L.str.3, 9
-
-	.type	.L.str.4,@object        # @.str.4
-.L.str.4:
-	.asciz	"manos %d\n"
-	.size	.L.str.4, 10
-
-	.type	.L.str.5,@object        # @.str.5
-.L.str.5:
 	.asciz	"giorgis %d\n"
-	.size	.L.str.5, 12
+	.size	.L.str.3, 12
 
 
 	.ident	"clang version 5.0.1 (tags/RELEASE_501/final)"

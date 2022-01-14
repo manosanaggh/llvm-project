@@ -7,8 +7,8 @@ void print_to_stdout();
 int main(){
 	fptr = fopen("/spare/manosanag/myllvm/llvm-project/tmp/log.txt", "w");
 	print_to_stdout();
-	fprintf(fptr,"manos\n");
-	fprintf(fptr,"giorgis\n");
+	//fprintf(fptr,"manos %d\n",2000);
+	//fprintf(fptr,"giorgis %d\n",2500);
 	fclose(fptr);
 	return 0;
 }
