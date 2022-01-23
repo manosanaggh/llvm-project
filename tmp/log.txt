@@ -1,2 +1,8 @@
-manos
-giorgis
+manos 2000 7.800000 0x400680
+giorgis 2500 6.700000 0x400680
+manos 2000 7.899999
+giorgis 2500 6.799990
+manos 2000
+giorgis 2500
+manos 2000 poi
+giorgis 2500 kl

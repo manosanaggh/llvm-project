@@ -28,40 +28,16 @@ using namespace llvm;
 
 STATISTIC(HelloCounter, "Counts number of functions greeted");
 
-Instruction *gi = NULL;
-unsigned int x = 0;
-
 namespace {
   // Hello - The first implementation, without getAnalysisUsage.
   struct Hy546llvmpass : public FunctionPass {
     static char ID; // Pass identification, replacement for typeid
     Hy546llvmpass() : FunctionPass(ID) {}
 
-    /*bool runOnFunction(Function &F) override {
-      //++Hy546llvmpassCounter;
-      errs() << "Hy546llvmpass: ";
-      errs().write_escaped(F.getName()) << '\n';
-      return false;
-    }*/
-
 bool runOnFunction(Function &F) override{
-	//errs() << "---runOnFunction---" << "\n";
 BasicBlock *bb = &F.getEntryBlock(); // 
-//errs() << *bb;
 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
   	Instruction* ii = &*i;
-	if(/*strstr(F.getName(),"main") &&*/ strstr((const char*)ii->getOpcodeName(), "store")){
-		x = 10;
-		outs() << *ii << "\n";
-		outs() << *(ii->getOperand(0)) << "\n";
-		outs() << *(ii->getOperand(0)->getType()) << "\n";
-		gi = ii;
-		//i++;
-		//Instruction* next = &*i;
-		//llvm::LoadInst *li = new llvm::LoadInst(ii->getOperand(0)->getType(), ii->getOperand(1), "", next);
-		//glInstVec.push_back(li);
-		//i--;
-	}
 
   	CallInst *callInst = dyn_cast<CallInst>(ii);
           if (callInst == nullptr) {
@@ -76,66 +52,51 @@ for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
 
         StringRef cfName = calledFunction->getName();
 	if(cfName == "printf"){
+		bool h = false;
       		errs() << "Caller function name: ";
       		errs().write_escaped(F.getName()) << "\n";
 		errs() << "Intruction of printf call: ";
 		errs() << *ii << "\n\n";
 		StringRef path = "/spare/manosanag/myllvm/llvm-project/tmp/sample.ll";
 		std::vector<Value *> Args;
-		/*for(llvm::Function::arg_iterator ai = calledFunction->arg_begin(), ae = calledFunction->arg_end(); ai != ae; ++ai){
-			Args.push_back(ai);
-			outs() << *ai << "\n";
-		}*/
-
-		//outs() << **(callInst->value_op_begin()) << "\n";
-		for(llvm::User::value_op_iterator vi = callInst->value_op_begin(); vi != callInst->value_op_end(); ++vi){
-			vi++;
-			if(vi == callInst->value_op_end()) break;
-			vi--;
-			//outs() << **vi << "\n";	
-			Args.push_back(*vi);
-		}
-
+		std::vector<Type*> targs;
                 i++;
                 Instruction* next = &*i;
-		//outs() << *(glInstVec[0]) << "\n";
-		if(gi== NULL) outs() << "NULL" << "\n";
-		//outs() << x << "\n";
-                llvm::LoadInst *li = new llvm::LoadInst(gi->getOperand(0)->getType(), gi->getOperand(1), "", next);
-		outs() << *(li->getPointerOperand()) << "\n";
-		//Function *fprintf = Function::Create(functionType, Function::ExternalLinkage, "fprintf", F.getParent());
-		F.getParent()->getOrInsertFunction("fprintf", Type::getInt64Ty(F.getParent()->getContext()),F.getParent()->getFunction("fopen")->getReturnType(),Type::getInt8PtrTy(F.getParent()->getContext()));
-		//Instruction *newInst = CallInst::Create(F.getParent()->getFunction("fprintf"), Args, "",next);
+		GlobalVariable *G;
+                for (auto &Global : F.getParent()->getGlobalList()){
+                        if(!h){ G = &Global; break;}
+                }
+		llvm::LoadInst *li = new llvm::LoadInst(G->getOperand(0)->getType(), llvm::cast<llvm::Value>(G), "", next);
+		Args.push_back(llvm::cast<llvm::Value>(li));
+
+                for(llvm::User::value_op_iterator vi = callInst->value_op_begin(); vi != callInst->value_op_end(); ++vi){
+                        vi++;
+                        if(vi == callInst->value_op_end()) break;
+                        vi--;
+                        Args.push_back(*vi);
+			targs.push_back((*vi)->getType());
+                }
+		SmallVector<Type*,sizeof(targs)>ArgTys;
+		ArgTys.push_back(G->getOperand(0)->getType());
+		ArgTys.push_back(ii->getOperand(0)->getType());
+
+		F.getParent()->getOrInsertFunction("fprintf", FunctionType::get(F.getParent()->getFunction("fopen")->getReturnType(), ArgTys, true));
+		Instruction *newInst = CallInst::Create(F.getParent()->getFunction("fprintf"), Args, "",next);
                 i--;
 		
-		//Function *fprintf;
-		//ArrayRef<Value*>arguments(Args);
-		//ArrayRef< Value* > arguments(ConstantInt::get(Type::getInt32Ty(F.getContext()), 0, true));
-		//bb->getInstList().insert(i, newInst);
-		//Type * returnType = Type::getInt32Ty(F.getContext());
-		//std::vector<Type *> argTypes;
-		//FunctionType * functionType = FunctionType::get(returnType, argTypes, false);
-		//Function * function = Function::Create(functionType, Function::ExternalLinkage, "main", F.getParent());
-		//Function *fprintf = Function::Create(functionType, Function::ExternalLinkage, "fwrite", F.getParent()); 
-		//Instruction *newInst = CallInst::Create(fprintf, "fwrite",ii);
-		//llvm::LoadInst *li = new llvm::LoadInst(llvm::Type::getInt8Ty(calledFunction->getContext()), Args[0], "test", ii);
 		std::error_code EC;
       		raw_ostream *out = new raw_fd_ostream(path, EC);
 		legacy::PassManager PM;
 		ModulePass *m = createPrintModulePass(*out, "");
 		PM.add(m);
 		PM.run(*(F.getParent()));
-		//newInst->insertAfter(ii);
 	}
 
 }
-//          CallInst *callInst = dyn_cast<CallInst>(&instruction);
-
    return false;
+   }
+};
 }
-  };
-}
-
 char Hy546llvmpass::ID = 0;
 static RegisterPass<Hy546llvmpass> X("hy546llvmpass", "hy546 llvm Pass");
 

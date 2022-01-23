@@ -7,19 +7,45 @@ target triple = "x86_64-unknown-linux-gnu"
 %struct._IO_marker = type { %struct._IO_marker*, %struct._IO_FILE*, i32 }
 
 @fptr = local_unnamed_addr global %struct._IO_FILE* null, align 8
-@.str = private unnamed_addr constant [49 x i8] c"/spare/manosanag/myllvm/llvm-project/tmp/log.txt\00", align 1
-@.str.1 = private unnamed_addr constant [2 x i8] c"w\00", align 1
-@.str.2 = private unnamed_addr constant [10 x i8] c"manos %d\0A\00", align 1
-@.str.3 = private unnamed_addr constant [12 x i8] c"giorgis %d\0A\00", align 1
+@.str = private unnamed_addr constant [13 x i8] c"manos %d %f\0A\00", align 1
+@.str.1 = private unnamed_addr constant [15 x i8] c"giorgis %d %f\0A\00", align 1
+@.str.2 = private unnamed_addr constant [49 x i8] c"/spare/manosanag/myllvm/llvm-project/tmp/log.txt\00", align 1
+@.str.3 = private unnamed_addr constant [2 x i8] c"w\00", align 1
+@.str.4 = private unnamed_addr constant [10 x i8] c"manos %d\0A\00", align 1
+@.str.5 = private unnamed_addr constant [12 x i8] c"giorgis %d\0A\00", align 1
+@.str.6 = private unnamed_addr constant [13 x i8] c"manos %d %s\0A\00", align 1
+@.str.7 = private unnamed_addr constant [4 x i8] c"poi\00", align 1
+@.str.8 = private unnamed_addr constant [15 x i8] c"giorgis %d %s\0A\00", align 1
+@.str.9 = private unnamed_addr constant [3 x i8] c"kl\00", align 1
+@.str.10 = private unnamed_addr constant [16 x i8] c"manos %d %f %p\0A\00", align 1
+@.str.11 = private unnamed_addr constant [18 x i8] c"giorgis %d %f %p\0A\00", align 1
 
 ; Function Attrs: nounwind uwtable
-define i32 @main() local_unnamed_addr #0 {
-  %1 = tail call %struct._IO_FILE* @fopen(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @.str, i64 0, i64 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i64 0, i64 0))
+define void @print_to_stdout_2() local_unnamed_addr #0 {
+  %1 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i64 0, i64 0), i32 2000, double 0x401F9999567DBB17)
+  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.1, i64 0, i64 0), i32 2500, double 6.799990e+00)
+  ret void
+}
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #1
+
+; Function Attrs: nounwind uwtable
+define i32 @main() #0 {
+  %1 = tail call %struct._IO_FILE* @fopen(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @.str.2, i64 0, i64 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.3, i64 0, i64 0))
   store %struct._IO_FILE* %1, %struct._IO_FILE** @fptr, align 8, !tbaa !2
-  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.2, i64 0, i64 0), i32 2000) #2
-  %3 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.3, i64 0, i64 0), i32 2500) #2
-  %4 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
-  %5 = tail call i32 @fclose(%struct._IO_FILE* %4)
+  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.10, i64 0, i64 0), i32 2000, double 0x401F333333333333, i32 (...)* bitcast (i32 ()* @main to i32 (...)*)) #2
+  %3 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @.str.11, i64 0, i64 0), i32 2500, double 6.700000e+00, i32 (...)* bitcast (i32 ()* @main to i32 (...)*)) #2
+  %4 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i64 0, i64 0), i32 2000, double 0x401F9999567DBB17) #2
+  %5 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.1, i64 0, i64 0), i32 2500, double 6.799990e+00) #2
+  %6 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
+  %7 = tail call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %6, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.4, i64 0, i64 0), i32 2000)
+  %8 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
+  %9 = tail call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %8, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.5, i64 0, i64 0), i32 2500)
+  %10 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str.6, i64 0, i64 0), i32 2000, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.7, i64 0, i64 0))
+  %11 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.8, i64 0, i64 0), i32 2500, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.9, i64 0, i64 0))
+  %12 = load %struct._IO_FILE*, %struct._IO_FILE** @fptr, align 8, !tbaa !2
+  %13 = tail call i32 @fclose(%struct._IO_FILE* %12)
   ret i32 0
 }
 
@@ -27,17 +53,17 @@ define i32 @main() local_unnamed_addr #0 {
 declare noalias %struct._IO_FILE* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #1
 
 ; Function Attrs: nounwind
+declare i32 @fprintf(%struct._IO_FILE* nocapture, i8* nocapture readonly, ...) local_unnamed_addr #1
+
+; Function Attrs: nounwind
 declare i32 @fclose(%struct._IO_FILE* nocapture) local_unnamed_addr #1
 
 ; Function Attrs: nounwind uwtable
 define void @print_to_stdout() local_unnamed_addr #0 {
-  %1 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.2, i64 0, i64 0), i32 2000)
-  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.3, i64 0, i64 0), i32 2500)
+  %1 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.10, i64 0, i64 0), i32 2000, double 0x401F333333333333, i32 (...)* bitcast (i32 ()* @main to i32 (...)*))
+  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @.str.11, i64 0, i64 0), i32 2500, double 6.700000e+00, i32 (...)* bitcast (i32 ()* @main to i32 (...)*))
   ret void
 }
-
-; Function Attrs: nounwind
-declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #1
 
 attributes #0 = { nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
