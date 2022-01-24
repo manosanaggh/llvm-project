@@ -56,7 +56,7 @@ enum PassManagerType {
   PMT_FunctionPassManager,   ///< FPPassManager
   PMT_LoopPassManager,       ///< LPPassManager
   PMT_RegionPassManager,     ///< RGPassManager
-  PMT_HY546LLVMPassManager,
+  //PMT_HY546LLVMPassManager,
   PMT_Last
 };
 
@@ -68,7 +68,7 @@ enum PassKind {
   PT_CallGraphSCC,
   PT_Module,
   PT_PassManager,
-  PT_HY546LLVM
+  //PT_HY546LLVM
 };
 
 /// This enumerates the LLVM full LTO or ThinLTO optimization phases.
@@ -331,7 +331,7 @@ extern bool TimePassesIsEnabled;
 /// (For new pass manager only)
 extern bool TimePassesPerRun;
 
-class HY546LLVMPass : public Pass{
+/*class HY546LLVMPass : public Pass{
         public:
 explicit HY546LLVMPass(char &pid) : Pass(PT_Function, pid) {}
   /// createPrinterPass - Get a function printer pass.
@@ -348,7 +348,7 @@ protected:
   /// optimization bisect is over the limit.
   bool skipFunction(const Function &F) const;
 
-};
+};*/
 
 } 
 

@@ -152,18 +152,18 @@ Pass *FunctionPass::createPrinterPass(raw_ostream &OS,
   return createPrintFunctionPass(OS, Banner);
 }
 
-Pass *HY546LLVMPass::createPrinterPass(raw_ostream &OS,
+/*Pass *HY546LLVMPass::createPrinterPass(raw_ostream &OS,
                                       const std::string &Banner) const {
   return createPrintHY546LLVMPass(OS, Banner);
-}
+}*/
 
 PassManagerType FunctionPass::getPotentialPassManagerType() const {
   return PMT_FunctionPassManager;
 }
 
-PassManagerType HY546LLVMPass::getPotentialPassManagerType() const {
+/*PassManagerType HY546LLVMPass::getPotentialPassManagerType() const {
   return PMT_HY546LLVMPassManager;
-}
+}*/
 
 
 static std::string getDescription(const Function &F) {
@@ -183,7 +183,7 @@ bool FunctionPass::skipFunction(const Function &F) const {
   return false;
 }
 
-bool HY546LLVMPass::skipFunction(const Function &F) const {
+/*bool HY546LLVMPass::skipFunction(const Function &F) const {
   OptPassGate &Gate = F.getContext().getOptPassGate();
   if (Gate.isEnabled() && !Gate.shouldRunPass(this, getDescription(F)))
     return true;
@@ -194,7 +194,7 @@ bool HY546LLVMPass::skipFunction(const Function &F) const {
     return true;
   }
   return false;
-}
+}*/
 
 const PassInfo *Pass::lookupPassInfo(const void *TI) {
   return PassRegistry::getPassRegistry()->getPassInfo(TI);

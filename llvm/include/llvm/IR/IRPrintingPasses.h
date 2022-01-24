@@ -38,8 +38,8 @@ FunctionPass *createPrintFunctionPass(raw_ostream &OS,
 
 /// Create and return a pass that prints functions to the specified
 /// \c raw_ostream as they are processed.
-HY546LLVMPass *createPrintHY546LLVMPass(raw_ostream &OS,
-                                      const std::string &Banner = "");
+//HY546LLVMPass *createPrintHY546LLVMPass(raw_ostream &OS,
+  //                                    const std::string &Banner = "");
 
 /// Print out a name of an LLVM value without any prefixes.
 ///
@@ -88,7 +88,7 @@ public:
 ///
 /// Note: This pass is for use with the new pass manager. Use the create...Pass
 /// functions above to create passes for use with the legacy pass manager.
-class PrintHY546LLVMPass : public PassInfoMixin<PrintHY546LLVMPass> {
+/*class PrintHY546LLVMPass : public PassInfoMixin<PrintHY546LLVMPass> {
   raw_ostream &OS;
   std::string Banner;
 
@@ -98,7 +98,7 @@ public:
 
   PreservedAnalyses run(Function &F, AnalysisManager<Function> &);
   static bool isRequired() { return true; }
-};
+};*/
 
 } // namespace llvm
 

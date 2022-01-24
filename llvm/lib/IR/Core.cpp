@@ -47,7 +47,7 @@ void llvm::initializeCore(PassRegistry &Registry) {
   initializeDominatorTreeWrapperPassPass(Registry);
   initializePrintModulePassWrapperPass(Registry);
   initializePrintFunctionPassWrapperPass(Registry);
-  initializePrintHY546LLVMPassWrapperPass(Registry);//
+  //initializePrintHY546LLVMPassWrapperPass(Registry);//
   initializeSafepointIRVerifierPass(Registry);
   initializeVerifierLegacyPassPass(Registry);
 }

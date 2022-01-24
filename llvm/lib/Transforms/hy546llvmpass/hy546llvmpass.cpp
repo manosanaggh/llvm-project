@@ -99,27 +99,3 @@ for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
 }
 char Hy546llvmpass::ID = 0;
 static RegisterPass<Hy546llvmpass> X("hy546llvmpass", "hy546 llvm Pass");
-
-namespace {
-  // Hello2 - The second implementation with getAnalysisUsage implemented.
-  struct Hy546llvmpass2 : public FunctionPass {
-    static char ID; // Pass identification, replacement for typeid
-    Hy546llvmpass2() : FunctionPass(ID) {}
-
-    bool runOnFunction(Function &F) override {
-      //++Hy546llvmpassCounter;
-      errs() << "Hy546llvmpass: ";
-      errs().write_escaped(F.getName()) << '\n';
-      return false;
-    }
-
-    // We don't modify the program, so we preserve all analyses.
-    void getAnalysisUsage(AnalysisUsage &AU) const override {
-      AU.setPreservesAll();
-    }
-  };
-}
-
-char Hy546llvmpass2::ID = 0;
-static RegisterPass<Hy546llvmpass2>
-Y("hy546llvmpass2", "hy546 llvm Pass (with getAnalysisUsage implemented)");
